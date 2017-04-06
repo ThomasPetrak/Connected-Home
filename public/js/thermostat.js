@@ -20,14 +20,14 @@ function setTemp(id, temp){
 }
 
 function decreaseTemp(id){
-    temps[getKey(id)] = temps[getKey(id)] - 1;
+    temps[getKey(id)] = parseInt(temps[getKey(id)]) - 1;
     $("#" + id).text(temps[getKey(id)]);
     
     sendTemps();
 }
 
 function increaseTemp(id){
-    temps[getKey(id)] = temps[getKey(id)] + 1;
+    temps[getKey(id)] = parseInt(temps[getKey(id)]) + 1;
     $("#" + id).text(temps[getKey(id)]);
     
     sendTemps();
@@ -52,7 +52,7 @@ function sendTemps(){
     json.room2.currentTemp = temps[1];
     json.room3.currentTemp = temps[2];
 
-    xhr.send(data);
+    xhr.send(json);
 }
 
 function updateTemps(json) {
