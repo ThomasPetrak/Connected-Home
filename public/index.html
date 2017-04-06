@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <script type="text/javascript" src="js/lights.js"></script>
+
+    <title>3 Col Portfolio - Start Bootstrap Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/3-col-portfolio.css" rel="stylesheet">
+
+    <!-- Temporary navbar container fix -->
+    <style>
+    .navbar-toggler {
+        z-index: 1;
+    }
+    
+    @media (max-width: 576px) {
+        nav > .container {
+            width: 100%;
+        }
+    }
+    </style>
+
+</head>
+
+<body background="img/connected_home.jpg">
+
+    <!-- Navigation -->
+    <nav class="navbar fixed-top navbar-toggleable-md navbar-inverse bg-inverse">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarExample" aria-controls="navbarExample" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="container">
+            <a class="navbar-brand" href="#">Welcome back, Tomas!</a>
+            <div class="collapse navbar-collapse" id="navbarExample">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Log out <span class="sr-only">(current)</span></a>
+                    </li>
+                    <!--<li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Bla</a>
+                    </li>-->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container margin-top">
+
+        <!-- Page Heading 
+        <h1 class="my-4">Page Heading <small>Secondary Text</small></h1>
+        -->
+
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 portfolio-item">
+                <div class="card h-100 tile1 threeD">
+                    <!--<a href="#"><img class="card-img-top img-fluid" src="http://placehold.it/700x400" alt=""></a>-->
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="#">Thermostat</a></h4>
+                        <p class="card-text">Living room: 22°C, req: 23°C
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/minus.png" width="30" height="30" align="right"></a>
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/plus.png" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Hall: 19°C, req: 19°C
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/minus.png" width="30" height="30" align="right"></a>
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/plus.png" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Bedroom: 23°C, req: 23°C
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/minus.png" width="30" height="30" align="right"></a>
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/plus.png" width="30" height="30" align="right"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 portfolio-item">
+                <div class="card h-100 tile2 threeD">
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="#">Lights</a></h4>
+                        <p class="card-text">Living room 
+                            <a href="javascript:switchLight('firstLight');"><img src="img/lightOff.png" id="firstLight" border="0" hspace="4" alt="W3Schools" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Kitchen
+                            <a href="javascript:switchLight('secondLight');"><img src="img/lightOn.png" id="secondLight" border="0" hspace="4" alt="W3Schools" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Garage
+                            <a href="javascript:switchLight('thirdLight');"><img src="img/lightOff.png" id="thirdLight" border="0" hspace="4" alt="W3Schools" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Patio
+                            <a href="javascript:switchLight('fourthLight');"><img src="img/lightOn.png" id="fourthLight" border="0" hspace="4" alt="W3Schools" width="30" height="30" align="right"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 portfolio-item">
+                <div class="card h-100 tile3 threeD">
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="#">Alarm</a></h4>
+                        <p class="card-text">Living room
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/ok.png" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Hall
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/ok.png" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Bedroom
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/warning.png" width="30" height="30" align="right"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 portfolio-item">
+                <div class="card h-100 tile4 threeD">
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="#">Hot Water</a></h4>
+                        <p class="card-text">Small Boiler
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/halfFull.svg" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Large Boiler
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/full.gif" width="30" height="30" align="right"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 portfolio-item">
+                <div class="card h-100 tile5 threeD">
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="#">Irrigation System</a></h4>
+                        <p class="card-text">Front lawn
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/irrigationOn.png" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Back lawn room
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/today.png" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Trees
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/sunrise.png" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Green House
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/today.png" width="30" height="30" align="right"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 portfolio-item">
+                <div class="card h-100 tile6 threeD">
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="#">Settings</a></h4>
+                        <p class="card-text">Permissions 
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/permissions.png" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Users
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/users.png" width="30" height="30" align="right"></a>
+                        </p>
+                        <p class="card-text">Change Password
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/password.ico" width="30" height="30" align="right"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Pagination -->
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link active" href="#">o</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">o</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">o</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <!--
+    <footer class="py-5 bg-inverse">
+        <div class="container">
+            <p class="m-0 text-center text-white">&copy; Honeyhell 2017</p>
+        </div>
+    </footer>
+    -->
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/tether/tether.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

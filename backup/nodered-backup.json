@@ -1,0 +1,635 @@
+[
+    {
+        "id": "ef00bec6.df7cd",
+        "type": "tab",
+        "label": "UI Requests"
+    },
+    {
+        "id": "2e4c39db.a0f846",
+        "type": "tab",
+        "label": "Device Data"
+    },
+    {
+        "id": "a3d56d.555c729",
+        "type": "tab",
+        "label": "Logic"
+    },
+    {
+        "id": "a8d54f60.135048",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    },
+    {
+        "id": "8f192564.cbc618",
+        "type": "http in",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "url": "/ui/lights/fd6ce24c-2e31-4577-9479-f69fcdee5feb",
+        "method": "get",
+        "swaggerDoc": "",
+        "x": 260,
+        "y": 80,
+        "wires": [
+            [
+                "3058642c.94fa7c"
+            ]
+        ]
+    },
+    {
+        "id": "a1cbd33c.08002",
+        "type": "comment",
+        "z": "ef00bec6.df7cd",
+        "name": "1. Get lights status",
+        "info": "",
+        "x": 150,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "d8067f76.17995",
+        "type": "ibmiot in",
+        "z": "2e4c39db.a0f846",
+        "authentication": "boundService",
+        "apiKey": "",
+        "inputType": "evt",
+        "deviceId": "",
+        "applicationId": "",
+        "deviceType": "RaspberryPiDeviceType",
+        "eventType": "+",
+        "commandType": "",
+        "format": "json",
+        "name": "IBM IoT",
+        "service": "registered",
+        "allDevices": "",
+        "allApplications": "",
+        "allDeviceTypes": "",
+        "allEvents": true,
+        "allCommands": "",
+        "allFormats": "",
+        "qos": 0,
+        "x": 90,
+        "y": 40,
+        "wires": [
+            [
+                "c40dc06e.fa903",
+                "dc360794.5479a8"
+            ]
+        ]
+    },
+    {
+        "id": "3805a3e1.6f365c",
+        "type": "cloudant out",
+        "z": "2e4c39db.a0f846",
+        "name": "Store raw data from device",
+        "cloudant": "",
+        "database": "raw-device-data",
+        "service": "Cloudant NoSQL DB-lt",
+        "payonly": false,
+        "operation": "insert",
+        "x": 320,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c40dc06e.fa903",
+        "type": "function",
+        "z": "2e4c39db.a0f846",
+        "name": "Transform for storage",
+        "func": "var storageMsg = {\n    payload: {\n        '_id': msg.deviceId,\n        'Meta': msg.payload.d.Meta,\n        'House': msg.payload.d.House\n    }\n};\n\nreturn storageMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 320,
+        "y": 340,
+        "wires": [
+            [
+                "823f250c.069ef8"
+            ]
+        ]
+    },
+    {
+        "id": "7cc7436d.fb2f0c",
+        "type": "inject",
+        "z": "a3d56d.555c729",
+        "name": "",
+        "topic": "",
+        "payload": "OPEN",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 162,
+        "y": 110,
+        "wires": [
+            [
+                "5c695860.c999f",
+                "4cac2a20.4f5814"
+            ]
+        ]
+    },
+    {
+        "id": "d9b75978.09b26",
+        "type": "inject",
+        "z": "a3d56d.555c729",
+        "name": "",
+        "topic": "",
+        "payload": "CLOSE",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 159,
+        "y": 189,
+        "wires": [
+            [
+                "5c695860.c999f",
+                "4cac2a20.4f5814"
+            ]
+        ]
+    },
+    {
+        "id": "5c695860.c999f",
+        "type": "switch",
+        "z": "a3d56d.555c729",
+        "name": "Position of the window?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "OPEN",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CLOSE",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 468,
+        "y": 181,
+        "wires": [
+            [
+                "4960388c.1a2e88"
+            ],
+            [
+                "6154f6dc.97057"
+            ]
+        ]
+    },
+    {
+        "id": "4960388c.1a2e88",
+        "type": "change",
+        "z": "a3d56d.555c729",
+        "name": "CLOSE WINDOW",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "CLOSE",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 724,
+        "y": 129,
+        "wires": [
+            [
+                "c8bcf44.98a9988"
+            ]
+        ]
+    },
+    {
+        "id": "6154f6dc.97057",
+        "type": "change",
+        "z": "a3d56d.555c729",
+        "name": "OPEN WINDOW",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "OPEN",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 724,
+        "y": 200,
+        "wires": [
+            [
+                "c8bcf44.98a9988"
+            ]
+        ]
+    },
+    {
+        "id": "4cac2a20.4f5814",
+        "type": "debug",
+        "z": "a3d56d.555c729",
+        "name": "POSITION",
+        "active": true,
+        "console": "true",
+        "complete": "payload",
+        "x": 375,
+        "y": 276,
+        "wires": []
+    },
+    {
+        "id": "c8bcf44.98a9988",
+        "type": "debug",
+        "z": "a3d56d.555c729",
+        "name": "ACTION",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 675,
+        "y": 291,
+        "wires": []
+    },
+    {
+        "id": "300d9cc9.7fe164",
+        "type": "cloudant out",
+        "z": "2e4c39db.a0f846",
+        "name": "",
+        "cloudant": "",
+        "database": "device-status",
+        "service": "Cloudant NoSQL DB-lt",
+        "payonly": true,
+        "operation": "insert",
+        "x": 800,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "169f592b.4f5c77",
+        "type": "inject",
+        "z": "a3d56d.555c729",
+        "name": "TEMPERATURE",
+        "topic": "",
+        "payload": "28",
+        "payloadType": "num",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 166,
+        "y": 420,
+        "wires": [
+            [
+                "6a2d31f7.d649a8",
+                "411b0be8.cdadac"
+            ]
+        ]
+    },
+    {
+        "id": "6a2d31f7.d649a8",
+        "type": "switch",
+        "z": "a3d56d.555c729",
+        "name": "Is warm the roon?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "18",
+                "vt": "str"
+            },
+            {
+                "t": "gt",
+                "v": "27",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 405,
+        "y": 420,
+        "wires": [
+            [
+                "9e608170.ec9eb"
+            ],
+            [
+                "8f29825c.45443"
+            ]
+        ]
+    },
+    {
+        "id": "9e608170.ec9eb",
+        "type": "change",
+        "z": "a3d56d.555c729",
+        "name": "HEATING",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "ACTIVATE HEATING",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 606,
+        "y": 383,
+        "wires": [
+            [
+                "60d23f86.d04aa"
+            ]
+        ]
+    },
+    {
+        "id": "8f29825c.45443",
+        "type": "change",
+        "z": "a3d56d.555c729",
+        "name": "AIR",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "ACTIVATE AIR",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 594,
+        "y": 453,
+        "wires": [
+            [
+                "60d23f86.d04aa"
+            ]
+        ]
+    },
+    {
+        "id": "411b0be8.cdadac",
+        "type": "debug",
+        "z": "a3d56d.555c729",
+        "name": "TEMP",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 352,
+        "y": 486,
+        "wires": []
+    },
+    {
+        "id": "60d23f86.d04aa",
+        "type": "debug",
+        "z": "a3d56d.555c729",
+        "name": "ACTION TEMP",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 620,
+        "y": 497,
+        "wires": []
+    },
+    {
+        "id": "18842ab6.0fe005",
+        "type": "cloudant in",
+        "z": "2e4c39db.a0f846",
+        "name": "",
+        "cloudant": "",
+        "database": "device-status",
+        "service": "Cloudant NoSQL DB-lt",
+        "search": "_id_",
+        "design": "",
+        "index": "",
+        "x": 320,
+        "y": 220,
+        "wires": [
+            [
+                "83efc4d4.5d2ab8"
+            ]
+        ]
+    },
+    {
+        "id": "dc360794.5479a8",
+        "type": "function",
+        "z": "2e4c39db.a0f846",
+        "name": "Extract Device ID",
+        "func": "\nreturn {\n    'payload': {\n        '_id': msg.deviceId\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 330,
+        "y": 160,
+        "wires": [
+            [
+                "18842ab6.0fe005"
+            ]
+        ]
+    },
+    {
+        "id": "83efc4d4.5d2ab8",
+        "type": "function",
+        "z": "2e4c39db.a0f846",
+        "name": "Extract _rev",
+        "func": "return {\n    'payload': {\n        '_rev': msg.payload._rev\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 310,
+        "y": 280,
+        "wires": [
+            [
+                "823f250c.069ef8"
+            ]
+        ]
+    },
+    {
+        "id": "823f250c.069ef8",
+        "type": "join",
+        "z": "2e4c39db.a0f846",
+        "name": "",
+        "mode": "custom",
+        "build": "merged",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "timeout": "",
+        "count": "2",
+        "x": 590,
+        "y": 340,
+        "wires": [
+            [
+                "300d9cc9.7fe164"
+            ]
+        ]
+    },
+    {
+        "id": "d2369c2b.631cb",
+        "type": "cloudant in",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "cloudant": "",
+        "database": "device-status",
+        "service": "Cloudant NoSQL DB-lt",
+        "search": "_id_",
+        "design": "",
+        "index": "",
+        "x": 420,
+        "y": 140,
+        "wires": [
+            [
+                "94ae67ec.36e8b8"
+            ]
+        ]
+    },
+    {
+        "id": "3058642c.94fa7c",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Set device ID",
+        "func": "msg.payload._id = 'rpi7';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 200,
+        "y": 140,
+        "wires": [
+            [
+                "d2369c2b.631cb"
+            ]
+        ]
+    },
+    {
+        "id": "94ae67ec.36e8b8",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Transform output",
+        "func": "function GetOnOff(value) {\n    return value === 0 ? 'off' : 'on';\n}\n\nvar house = msg.payload.House;\n\nvar lightsMsgPayload = {\n    \"id\": \"lights\",\n    \"firstLight\": GetOnOff(house.Light1Status),\n    \"secondLight\": GetOnOff(house.Light2Status),\n    \"thirdLight\": GetOnOff(house.Light3Status),\n    \"fourthLight\": GetOnOff(house.Light4Status)\n};\n\nmsg.payload = lightsMsgPayload;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 650,
+        "y": 140,
+        "wires": [
+            [
+                "36f5c129.e18b6e"
+            ]
+        ]
+    },
+    {
+        "id": "36f5c129.e18b6e",
+        "type": "http response",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "x": 850,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "ced75aed.65ea08",
+        "type": "http in",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "url": "/ui/lights/fd6ce24c-2e31-4577-9479-f69fcdee5feb",
+        "method": "put",
+        "swaggerDoc": "",
+        "x": 260,
+        "y": 260,
+        "wires": [
+            [
+                "4d1e4c65.d69404"
+            ]
+        ]
+    },
+    {
+        "id": "4d1e4c65.d69404",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Transform data to send",
+        "func": "function GetNumericVal(onOff) {\n    if (onOff === 'on') {\n        return 1;\n    }\n    \n    return 0;\n}\n\nvar request = msg.payload;\n\nvar deviceMessage = {\n    'd': {\n        'House': {\n            'Light1Status': GetNumericVal(request.firstLight),\n            'Light2Status': GetNumericVal(request.secondLight),\n            'Light3Status': GetNumericVal(request.thirdLight),\n            'Light4Status': GetNumericVal(request.fourthLight)\n        }\n    }\n};\n\nmsg.payload = deviceMessage;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 260,
+        "wires": [
+            [
+                "af0d7d45.55f1f",
+                "aae29e64.ec88f"
+            ]
+        ]
+    },
+    {
+        "id": "af0d7d45.55f1f",
+        "type": "ibmiot out",
+        "z": "ef00bec6.df7cd",
+        "authentication": "boundService",
+        "apiKey": "",
+        "outputType": "cmd",
+        "deviceId": "rpi7",
+        "deviceType": "RaspberryPiDeviceType",
+        "eventCommandType": "lights",
+        "format": "json",
+        "data": "fromMsg",
+        "qos": 0,
+        "name": "IBM IoT",
+        "service": "registered",
+        "x": 890,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "6d001ce9.494284",
+        "type": "http response",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "x": 1060,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "aae29e64.ec88f",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Ok response",
+        "func": "msg.payload = { 'status': 'Ok' };\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 340,
+        "wires": [
+            [
+                "6d001ce9.494284"
+            ]
+        ]
+    },
+    {
+        "id": "e1097104.3d17c",
+        "type": "comment",
+        "z": "ef00bec6.df7cd",
+        "name": "2. Set the lights from the browser",
+        "info": "",
+        "x": 190,
+        "y": 220,
+        "wires": []
+    }
+]
