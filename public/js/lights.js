@@ -62,20 +62,17 @@ function sendJson(){
 }
 
 function fetchLightStates(){
-    // fetch data here
-    
-    var json = '{"result":true,"count":1}';
-    parsedJSON = JSON.parse(json);
-    
-    firstLight = json.firstLight;
-    secondLight = json.secondLight;
-    thirdLight = json.thirdLight;
-    fourthLight = json.fourthLight;
-    
-    setLightState(lightsNames[0], firstLight);
-    setLightState(lightsNames[1], secondLight);
-    setLightState(lightsNames[2], thirdLight);
-    setLightState(lightsNames[3], fourthLight);
+    $.getJSON('https://hon-hackaton-team3-nr.mybluemix.net/ui/lights/fd6ce24c-2e31-4577-9479-f69fcdee5feb', function(data) {
+        firstLight = data.firstLight;
+        secondLight = data.secondLight;
+        thirdLight = data.thirdLight;
+        fourthLight = data.fourthLight;
+
+        setLightState(lightsNames[0], firstLight);
+        setLightState(lightsNames[1], secondLight);
+        setLightState(lightsNames[2], thirdLight);
+        setLightState(lightsNames[3], fourthLight);
+    });
 }
 
 
