@@ -14,6 +14,10 @@ function LiveFeedConnect() {
                 SetAlarmState(payload);
                 break;
 
+            case 'comfort':
+                updateTemps(payload);
+                break;
+
             default:
                 break;
         }

@@ -1,6 +1,7 @@
 var tempsURL = "https://hon-hackaton-team3-nr.mybluemix.net/ui/comfort/91c9e1d6-6976-452c-a431-c333fb12354d";
 var tempNames = ["temp1", "temp2", "temp3"];
 var temps = [0, 0, 0];
+var tempsCurr = [0, 0, 0];
 var json = "";
 
 $(document).ready(function(){
@@ -22,14 +23,14 @@ function setTemp(id, temp){
 function decreaseTemp(id){
     temps[getKey(id)] = parseInt(temps[getKey(id)]) - 1;
     $("#" + id).text(temps[getKey(id)]);
-    
+
     sendTemps();
 }
 
 function increaseTemp(id){
     temps[getKey(id)] = parseInt(temps[getKey(id)]) + 1;
     $("#" + id).text(temps[getKey(id)]);
-    
+
     sendTemps();
 }
 
@@ -48,20 +49,25 @@ function sendTemps(){
     xhr.open("PUT", tempsURL, true);
     xhr.setRequestHeader("Content-type", "application/json");
 
-    json.room1.currentTemp = temps[0];
-    json.room2.currentTemp = temps[1];
-    json.room3.currentTemp = temps[2];
+    json.room1.targetTemp = parseInt(temps[0]);
+    json.room2.targetTemp = parseInt(temps[1]);
+    json.room3.targetTemp = parseInt(temps[2]);
 
-    xhr.send(json);
+    xhr.send(JSON.stringify(json));
 }
 
 function updateTemps(json) {
-    temps[0] = json.room1.currentTemp.toString();
-    temps[1] = json.room2.currentTemp.toString();
-    temps[2] = json.room3.currentTemp.toString();
-    
+    temps[0] = json.room1.targetTemp.toString();
+    temps[1] = json.room2.targetTemp.toString();
+    temps[2] = json.room3.targetTemp.toString();
+
+    tempsCurr[0] = json.room1.currentTemp.toString();
+    tempsCurr[1] = json.room2.currentTemp.toString();
+    tempsCurr[2] = json.room3.currentTemp.toString();
+
     for(i=0; i<temps.length; i++){
         setTemp(tempNames[i], temps[i]);
+        setTemp(tempNames[i] + 'cur', tempsCurr[i]);
     }
 }
 
