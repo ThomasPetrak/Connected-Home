@@ -1,5 +1,5 @@
 function LiveFeedConnect() {
-    var wsUri = "ws://hon-hackaton-team3-nr.mybluemix.net/ws/livefeed";
+    var wsUri = "wss://hon-hackaton-team3-nr.mybluemix.net/ws/livefeed";
     var ws = new WebSocket(wsUri);
 
     ws.onmessage = function (ev) {
