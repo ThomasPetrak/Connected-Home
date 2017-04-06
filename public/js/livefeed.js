@@ -1,19 +1,32 @@
-var wsUri = "ws://hon-hackaton-team3-nr.mybluemix.net/ws/livefeed";
-var ws = new WebSocket(wsUri);
+function LiveFeedConnect() {
+    var wsUri = "ws://hon-hackaton-team3-nr.mybluemix.net/ws/livefeed";
+    var ws = new WebSocket(wsUri);
 
-ws.onmessage = function(ev) {
-    var payload = JSON.parse(ev.data);
+    ws.onmessage = function (ev) {
+        var payload = JSON.parse(ev.data);
 
-    switch (payload.id) {
-        case 'lights':
-            updateStates(payload);
-            break;
+        switch (payload.id) {
+            case 'lights':
+                updateStates(payload);
+                break;
 
-        case 'alarms':
-            SetAlarmState(payload);
-            break;
+            case 'alarms':
+                SetAlarmState(payload);
+                break;
 
-        default:
-            break;
-    }
+            default:
+                break;
+        }
+    };
+
+    ws.onclose = function (e) {
+        console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+        setTimeout(function () {
+            LiveFeedConnect();
+        }, 1000)
+    };
 }
+
+$(document).ready(function () {
+    LiveFeedConnect();
+});

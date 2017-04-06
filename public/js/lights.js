@@ -62,7 +62,9 @@ function sendJson() {
 }
 
 function fetchLightStates() {
-    updateStates($.getJSON('https://hon-hackaton-team3-nr.mybluemix.net/ui/lights/fd6ce24c-2e31-4577-9479-f69fcdee5feb'));
+    $.getJSON('https://hon-hackaton-team3-nr.mybluemix.net/ui/lights/fd6ce24c-2e31-4577-9479-f69fcdee5feb', function (data) {
+        updateStates(data);
+    });
 }
 
 function updateStates(data) {
