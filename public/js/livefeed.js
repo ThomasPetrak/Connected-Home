@@ -18,6 +18,10 @@ function LiveFeedConnect() {
                 updateTemps(payload);
                 break;
 
+            case 'ext:lights':
+                UpdateExternalLights(payload);
+                break;
+
             default:
                 break;
         }

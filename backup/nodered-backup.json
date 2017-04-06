@@ -15,6 +15,13 @@
         "label": "Logic"
     },
     {
+        "id": "98318599.ddae88",
+        "type": "websocket-listener",
+        "z": "",
+        "path": "/ws/livefeed",
+        "wholemsg": "false"
+    },
+    {
         "id": "8f192564.cbc618",
         "type": "http in",
         "z": "ef00bec6.df7cd",
@@ -63,11 +70,13 @@
         "allFormats": "",
         "qos": 0,
         "x": 90,
-        "y": 40,
+        "y": 180,
         "wires": [
             [
                 "c40dc06e.fa903",
-                "dc360794.5479a8"
+                "dc360794.5479a8",
+                "837d2b2d.701368",
+                "6aac032e.3e060c"
             ]
         ]
     },
@@ -82,7 +91,7 @@
         "payonly": false,
         "operation": "insert",
         "x": 320,
-        "y": 40,
+        "y": 180,
         "wires": []
     },
     {
@@ -94,7 +103,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 320,
-        "y": 340,
+        "y": 480,
         "wires": [
             [
                 "823f250c.069ef8"
@@ -262,7 +271,7 @@
         "payonly": true,
         "operation": "insert",
         "x": 800,
-        "y": 340,
+        "y": 480,
         "wires": []
     },
     {
@@ -407,10 +416,11 @@
         "design": "",
         "index": "",
         "x": 320,
-        "y": 220,
+        "y": 360,
         "wires": [
             [
-                "83efc4d4.5d2ab8"
+                "83efc4d4.5d2ab8",
+                "a03bd44d.4b46b8"
             ]
         ]
     },
@@ -423,7 +433,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 330,
-        "y": 160,
+        "y": 300,
         "wires": [
             [
                 "18842ab6.0fe005"
@@ -439,7 +449,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 310,
-        "y": 280,
+        "y": 420,
         "wires": [
             [
                 "823f250c.069ef8"
@@ -460,10 +470,11 @@
         "timeout": "",
         "count": "2",
         "x": 590,
-        "y": 340,
+        "y": 480,
         "wires": [
             [
-                "300d9cc9.7fe164"
+                "300d9cc9.7fe164",
+                "e3a6cc14.57bb8"
             ]
         ]
     },
@@ -556,7 +567,8 @@
         "wires": [
             [
                 "af0d7d45.55f1f",
-                "aae29e64.ec88f"
+                "aae29e64.ec88f",
+                "a6b20ce4.46592"
             ]
         ]
     },
@@ -575,7 +587,7 @@
         "qos": 0,
         "name": "IBM IoT",
         "service": "registered",
-        "x": 890,
+        "x": 880,
         "y": 260,
         "wires": []
     },
@@ -584,8 +596,8 @@
         "type": "http response",
         "z": "ef00bec6.df7cd",
         "name": "",
-        "x": 1060,
-        "y": 340,
+        "x": 1050,
+        "y": 320,
         "wires": []
     },
     {
@@ -596,8 +608,8 @@
         "func": "msg.payload = msg.origPayload;\n//{ 'status': 'Ok' };\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 900,
-        "y": 340,
+        "x": 890,
+        "y": 320,
         "wires": [
             [
                 "6d001ce9.494284"
@@ -613,5 +625,555 @@
         "x": 190,
         "y": 220,
         "wires": []
+    },
+    {
+        "id": "a6b20ce4.46592",
+        "type": "debug",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 890,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "837d2b2d.701368",
+        "type": "function",
+        "z": "2e4c39db.a0f846",
+        "name": "Assign topic 'device'",
+        "func": "msg.topic = 'device';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 340,
+        "y": 240,
+        "wires": [
+            [
+                "1ed18b34.093885"
+            ]
+        ]
+    },
+    {
+        "id": "a03bd44d.4b46b8",
+        "type": "function",
+        "z": "2e4c39db.a0f846",
+        "name": "Assign topic 'cloudant'",
+        "func": "msg.topic = 'cloudant';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 360,
+        "wires": [
+            [
+                "1ed18b34.093885"
+            ]
+        ]
+    },
+    {
+        "id": "1ed18b34.093885",
+        "type": "function",
+        "z": "2e4c39db.a0f846",
+        "name": "Check for changed data",
+        "func": "context.data = context.data || { };\n\nswitch (msg.topic) {\n    case \"device\":\n        context.data.device = msg.payload;\n        msg = null;\n        break;\n    case \"cloudant\":\n        context.data.cloudant = msg.payload;\n        msg = null;\n        break;\n        \n    default:\n        msg = null;\n    \tbreak;\n}\n\nif(context.data.device === undefined ||\n   context.data.cloudant === undefined) {\n\t// we dont't have both values -> stop the flow\n\treturn null;\n}\n\nfunction GetOnOff(value) {\n    return value === 0 ? 'off' : 'on';\n}\n\nvar d = context.data.device.d;\nvar c = context.data.cloudant;\ncontext.data=null;\nvar changes = [];\n\n// compare stored and received data - lights\nvar lightsMsgPayload = {\n    \"id\": \"lights\",\n    \"firstLight\": GetOnOff(c.House.Light1Status),\n    \"secondLight\": GetOnOff(c.House.Light2Status),\n    \"thirdLight\": GetOnOff(c.House.Light3Status),\n    \"fourthLight\": GetOnOff(c.House.Light4Status)\n};\nvar lightsChanges = false;\n\nif (d.House.Light1Status != c.House.Light1Status) {\n    lightsChanges = true;\n    lightsMsgPayload.firstLight = GetOnOff(d.House.Light1Status);\n}\n\nif (d.House.Light2Status != c.House.Light2Status) {\n    lightsChanges = true;\n    lightsMsgPayload.secondLight = GetOnOff(d.House.Light2Status);\n}\n\nif (d.House.Light3Status != c.House.Light3Status) {\n    lightsChanges = true;\n    lightsMsgPayload.thirdLight = GetOnOff(d.House.Light3Status);\n}\n\nif (d.House.Light4Status != c.House.Light4Status) {\n    lightsChanges = true;\n    lightsMsgPayload.fourthLight = GetOnOff(d.House.Light4Status);\n}\n\nif (lightsChanges) {\n    changes.push({\n        payload: lightsMsgPayload\n    });\n}\n\nfunction GetOpenClosed(value) {\n    return value === 0 ? 'closed' : 'open';\n}\n\n// alarms\nvar alarmsMsgPayload = {\n    \"id\": \"alarms\",\n    \"kitchenWindow\": GetOpenClosed(c.House.Window6Open)\n};\n\nvar alarmsChanged = false;\nif (d.House.Window6Open != c.House.Window6Open) {\n    alarmsChanged = true;\n    alarmsMsgPayload.kitchenWindow = GetOpenClosed(d.House.Window6Open);\n}\n\nif (alarmsChanged) {\n    changes.push({\n        payload: alarmsMsgPayload\n    });\n}\n\n// comfort\nvar comfortMsgPayload = {\n  \"id\": \"comfort\",\n  \"room1\": {\n    \"currentTemp\": c.House.Room1Temperature,\n    \"targetTemp\": c.House.Room1TargetTemperature\n  },\n  \"room2\": {\n    \"currentTemp\": c.House.Room2Temperature,\n    \"targetTemp\": c.House.Room2TargetTemperature\n  },\n  \"room3\": {\n    \"currentTemp\": c.House.Room3Temperature,\n    \"targetTemp\": c.House.Room3TargetTemperature\n  },\n  \"room4\": {\n    \"currentTemp\": c.House.Room4Temperature,\n    \"targetTemp\": c.House.Room4TargetTemperature\n  },\n  \"room5\": {\n    \"currentTemp\": c.House.Room5Temperature,\n    \"targetTemp\": c.House.Room5TargetTemperature\n  },\n  \"room6\": {\n    \"currentTemp\": c.House.Room6Temperature,\n    \"targetTemp\": c.House.Room6TargetTemperature\n  }\n};\n\nvar comfortChanged = false;\n// room 1\nif (d.House.Room1Temperature != c.House.Room1Temperature) {\n    comfortChanged = true;\n    comfortMsgPayload.room1.currentTemp = d.House.Room1Temperature;\n}\nif (d.House.Room1TargetTemperature != c.House.Room1TargetTemperature) {\n    comfortChanged = true;\n    comfortMsgPayload.room1.targetTemp = d.House.Room1TargetTemperature;\n}\n// room 2\nif (d.House.Room2Temperature != c.House.Room2Temperature) {\n    comfortChanged = true;\n    comfortMsgPayload.room2.currentTemp = d.House.Room2Temperature;\n}\nif (d.House.Room2TargetTemperature != c.House.Room2TargetTemperature) {\n    comfortChanged = true;\n    comfortMsgPayload.room2.targetTemp = d.House.Room2TargetTemperature;\n}\n// room 3\nif (d.House.Room3Temperature != c.House.Room3Temperature) {\n    comfortChanged = true;\n    comfortMsgPayload.room3.currentTemp = d.House.Room3Temperature;\n}\nif (d.House.Room3TargetTemperature != c.House.Room3TargetTemperature) {\n    comfortChanged = true;\n    comfortMsgPayload.room3.targetTemp = d.House.Room3TargetTemperature;\n}\n// room 4\nif (d.House.Room4Temperature != c.House.Room4Temperature) {\n    comfortChanged = true;\n    comfortMsgPayload.room4.currentTemp = d.House.Room4Temperature;\n}\nif (d.House.Room4TargetTemperature != c.House.Room4TargetTemperature) {\n    comfortChanged = true;\n    comfortMsgPayload.room4.targetTemp = d.House.Room4TargetTemperature;\n}\n\nif (comfortChanged) {\n    changes.push({\n        payload: comfortMsgPayload\n    });\n}\n\nif (changes.length > 0) {\n    return changes;\n}\n\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 820,
+        "y": 280,
+        "wires": [
+            [
+                "fb717e99.13f9d",
+                "e868d755.298008"
+            ]
+        ]
+    },
+    {
+        "id": "fb717e99.13f9d",
+        "type": "debug",
+        "z": "2e4c39db.a0f846",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "true",
+        "x": 1040,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "e868d755.298008",
+        "type": "websocket out",
+        "z": "2e4c39db.a0f846",
+        "name": "",
+        "server": "98318599.ddae88",
+        "client": "",
+        "x": 1060,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "6aac032e.3e060c",
+        "type": "debug",
+        "z": "2e4c39db.a0f846",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 290,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "e3a6cc14.57bb8",
+        "type": "debug",
+        "z": "2e4c39db.a0f846",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 760,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "b3005eeb.022b3",
+        "type": "http in",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "url": "/ui/comfort/91c9e1d6-6976-452c-a431-c333fb12354d",
+        "method": "get",
+        "swaggerDoc": "",
+        "x": 280,
+        "y": 480,
+        "wires": [
+            [
+                "6350018.18165"
+            ]
+        ]
+    },
+    {
+        "id": "4f74f55c.8ee2dc",
+        "type": "comment",
+        "z": "ef00bec6.df7cd",
+        "name": "3. Get temperature status",
+        "info": "",
+        "x": 170,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "c67fb15b.432e8",
+        "type": "cloudant in",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "cloudant": "",
+        "database": "device-status",
+        "service": "Cloudant NoSQL DB-lt",
+        "search": "_id_",
+        "design": "",
+        "index": "",
+        "x": 420,
+        "y": 540,
+        "wires": [
+            [
+                "f7a50d71.12c84"
+            ]
+        ]
+    },
+    {
+        "id": "6350018.18165",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Set device ID",
+        "func": "msg.payload._id = 'rpi7';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 200,
+        "y": 540,
+        "wires": [
+            [
+                "c67fb15b.432e8"
+            ]
+        ]
+    },
+    {
+        "id": "f7a50d71.12c84",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Transform output",
+        "func": "function GetRoom(tt, ct) {\n    return {\n        'currentTemp': ct,\n        'targetTemp': tt\n    };\n}\n\nvar house = msg.payload.House;\n\nvar lightsMsgPayload = {\n    \"id\": \"comfort\",\n    \"room1\": GetRoom(\n        house.Room1TargetTemperature,\n        house.Room1Temperature),\n    \"room2\": GetRoom(\n        house.Room2TargetTemperature,\n        house.Room2Temperature),\n    \"room3\": GetRoom(\n        house.Room3TargetTemperature,\n        house.Room3Temperature),\n    \"room4\": GetRoom(\n        house.Room4TargetTemperature,\n        house.Room4Temperature),\n    \"room5\": GetRoom(\n        house.Room5TargetTemperature,\n        house.Room5Temperature),\n    \"room6\": GetRoom(\n        house.Room6TargetTemperature,\n        house.Room6Temperature)\n};\n\nmsg.payload = lightsMsgPayload;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 650,
+        "y": 540,
+        "wires": [
+            [
+                "6bf5c309.19b97c"
+            ]
+        ]
+    },
+    {
+        "id": "6bf5c309.19b97c",
+        "type": "http response",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "x": 850,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "5360bdc5.fdd514",
+        "type": "http in",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "url": "/ui/comfort/91c9e1d6-6976-452c-a431-c333fb12354d",
+        "method": "put",
+        "swaggerDoc": "",
+        "x": 280,
+        "y": 660,
+        "wires": [
+            [
+                "70147f13.f57c3",
+                "77056f30.0fe54"
+            ]
+        ]
+    },
+    {
+        "id": "70147f13.f57c3",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Transform data to send",
+        "func": "var request = msg.payload;\n\nvar deviceMessage = {\n    'd': {\n        'House': {\n            'Room1TargetTemperature': request.room1.targetTemp,\n            'Room2TargetTemperature': request.room2.targetTemp,\n            'Room3TargetTemperature': request.room3.targetTemp,\n            'Room4TargetTemperature': request.room4.targetTemp,\n            'Room5TargetTemperature': request.room5.targetTemp,\n            'Room6TargetTemperature': request.room6.targetTemp\n        }\n    }\n};\n\nmsg.origPayload = msg.payload;\nmsg.payload = deviceMessage;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 660,
+        "wires": [
+            [
+                "e51cfa74.824278",
+                "6fbe0a05.294b64",
+                "514dc699.61b218"
+            ]
+        ]
+    },
+    {
+        "id": "e51cfa74.824278",
+        "type": "ibmiot out",
+        "z": "ef00bec6.df7cd",
+        "authentication": "boundService",
+        "apiKey": "",
+        "outputType": "cmd",
+        "deviceId": "rpi7",
+        "deviceType": "RaspberryPiDeviceType",
+        "eventCommandType": "lights",
+        "format": "json",
+        "data": "fromMsg",
+        "qos": 0,
+        "name": "IBM IoT",
+        "service": "registered",
+        "x": 940,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "527297c1.76c028",
+        "type": "http response",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "x": 1110,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "6fbe0a05.294b64",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Ok response",
+        "func": "msg.payload = msg.origPayload;\n//{ 'status': 'Ok' };\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 950,
+        "y": 720,
+        "wires": [
+            [
+                "527297c1.76c028"
+            ]
+        ]
+    },
+    {
+        "id": "b24ad29e.91574",
+        "type": "comment",
+        "z": "ef00bec6.df7cd",
+        "name": "4. Set the target temperature from the browser",
+        "info": "",
+        "x": 240,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "514dc699.61b218",
+        "type": "debug",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 950,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "77056f30.0fe54",
+        "type": "debug",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 630,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "9a3c1e93.35a1e",
+        "type": "http in",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "url": "/ui/integration/lights/1711e73a-5de0-45fe-b285-a37c7fa76111",
+        "method": "get",
+        "swaggerDoc": "",
+        "x": 300,
+        "y": 860,
+        "wires": [
+            [
+                "9265f033.41826"
+            ]
+        ]
+    },
+    {
+        "id": "66c2fb4d.b1ae14",
+        "type": "comment",
+        "z": "ef00bec6.df7cd",
+        "name": "5. Get external system status",
+        "info": "",
+        "x": 180,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "c833bdb0.9ce19",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Transform output",
+        "func": "var value = msg.payload;\n\nmsg.payload = {\n  \"id\": \"ext:lights\",\n  \"lightIntensity\": parseInt(value) || 0\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 650,
+        "y": 920,
+        "wires": [
+            [
+                "9a7f29a9.f56208",
+                "a24d51b9.e1502"
+            ]
+        ]
+    },
+    {
+        "id": "9a7f29a9.f56208",
+        "type": "http response",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "x": 850,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "c5b1a812.15bb98",
+        "type": "http in",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "url": "/ui/integration/lights/1711e73a-5de0-45fe-b285-a37c7fa76111",
+        "method": "put",
+        "swaggerDoc": "",
+        "x": 300,
+        "y": 1040,
+        "wires": [
+            [
+                "eb52418c.f40f4"
+            ]
+        ]
+    },
+    {
+        "id": "eb52418c.f40f4",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Transform data to send",
+        "func": "var request = msg.payload;\n\nvar url = 'http://hackapiendpoint.mybluemix.net/submit/12/' + request.lightIntensity;\n\nmsg.origPayload = msg.payload;\nmsg.payload = null;\nmsg.url = url;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 1040,
+        "wires": [
+            [
+                "aab4d686.e5e938"
+            ]
+        ]
+    },
+    {
+        "id": "d22daee8.902fd",
+        "type": "http response",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "x": 1170,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "15b00ceb.73b033",
+        "type": "function",
+        "z": "ef00bec6.df7cd",
+        "name": "Ok response",
+        "func": "msg.payload = msg.origPayload;\n//{ 'status': 'Ok' };\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1030,
+        "y": 1040,
+        "wires": [
+            [
+                "d22daee8.902fd"
+            ]
+        ]
+    },
+    {
+        "id": "b6564159.f81ea",
+        "type": "comment",
+        "z": "ef00bec6.df7cd",
+        "name": "2. Set the lights from the browser",
+        "info": "",
+        "x": 190,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "b4acfe15.39e37",
+        "type": "debug",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 1030,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "9265f033.41826",
+        "type": "http request",
+        "z": "ef00bec6.df7cd",
+        "name": "Get device 12 state",
+        "method": "GET",
+        "ret": "txt",
+        "url": "http://hackapiendpoint.mybluemix.net/extract/12",
+        "tls": "",
+        "x": 410,
+        "y": 920,
+        "wires": [
+            [
+                "c833bdb0.9ce19",
+                "2f096875.864ee8"
+            ]
+        ]
+    },
+    {
+        "id": "2f096875.864ee8",
+        "type": "debug",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 730,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "a24d51b9.e1502",
+        "type": "debug",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 970,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "aab4d686.e5e938",
+        "type": "http request",
+        "z": "ef00bec6.df7cd",
+        "name": "",
+        "method": "PUT",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 870,
+        "y": 1040,
+        "wires": [
+            [
+                "b4acfe15.39e37",
+                "15b00ceb.73b033"
+            ]
+        ]
+    },
+    {
+        "id": "f2f9bd74.89f59",
+        "type": "inject",
+        "z": "2e4c39db.a0f846",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "x": 110,
+        "y": 80,
+        "wires": [
+            [
+                "b74bb9f5.89f148"
+            ]
+        ]
+    },
+    {
+        "id": "b74bb9f5.89f148",
+        "type": "http request",
+        "z": "2e4c39db.a0f846",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "http://hackapiendpoint.mybluemix.net/extract/12",
+        "tls": "",
+        "x": 290,
+        "y": 80,
+        "wires": [
+            [
+                "47ec6ea6.92e51"
+            ]
+        ]
+    },
+    {
+        "id": "47ec6ea6.92e51",
+        "type": "function",
+        "z": "2e4c39db.a0f846",
+        "name": "Check for change",
+        "func": "var lastVal = context.get('device12value')||0;\n\nvar value = parseInt(msg.payload) || 0\n\nif (value != lastVal) {\n    context.set('device12value',value);\n    \n    return {\n        'payload': {\n            \"id\": \"ext:lights\",\n            \"lightIntensity\": value\n        }\n    };\n}\n\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 550,
+        "y": 80,
+        "wires": [
+            [
+                "e868d755.298008"
+            ]
+        ]
     }
 ]
