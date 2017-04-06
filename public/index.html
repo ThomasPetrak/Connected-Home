@@ -7,11 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    
+
     <!-- Adding Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script type="text/javascript" src="js/lights.js"></script>
     <script type="text/javascript" src="js/thermostat.js"></script>
+    <script type="text/javascript" src="js/alarm.js"></script>
+    <script type="text/javascript" src="js/livefeed.js"></script>
 
 
     <title>3 Col Portfolio - Start Bootstrap Template</title>
@@ -24,15 +26,15 @@
 
     <!-- Temporary navbar container fix -->
     <style>
-    .navbar-toggler {
-        z-index: 1;
-    }
-    
-    @media (max-width: 576px) {
-        nav > .container {
-            width: 100%;
+        .navbar-toggler {
+            z-index: 1;
         }
-    }
+
+        @media (max-width: 576px) {
+            nav>.container {
+                width: 100%;
+            }
+        }
     </style>
 
 </head>
@@ -41,7 +43,8 @@
 
     <!-- Navigation -->
     <nav class="navbar fixed-top navbar-toggleable-md navbar-inverse bg-inverse">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarExample" aria-controls="navbarExample" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarExample" aria-controls="navbarExample"
+            aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="container">
@@ -68,7 +71,7 @@
     <!-- Page Content -->
     <div class="container margin-top">
 
-        <!-- Page Heading 
+        <!-- Page Heading
         <h1 class="my-4">Page Heading <small>Secondary Text</small></h1>
         -->
 
@@ -97,17 +100,21 @@
                 <div class="card h-100 tile2 threeD">
                     <div class="card-block">
                         <h4 class="card-title"><a href="#">Lights</a></h4>
-                        <p class="card-text">Living room 
-                            <a href="javascript:switchLight('firstLight');"><img src="img/lightOff.png" id="firstLight" border="0" hspace="4" alt="W3Schools" width="30" height="30" align="right"></a>
+                        <p class="card-text">Living room
+                            <a href="javascript:switchLight('firstLight');"><img src="img/lightOff.png" id="firstLight" border="0" hspace="4" alt="W3Schools" width="30"
+                                    height="30" align="right"></a>
                         </p>
                         <p class="card-text">Kitchen
-                            <a href="javascript:switchLight('secondLight');"><img src="img/lightOn.png" id="secondLight" border="0" hspace="4" alt="W3Schools" width="30" height="30" align="right"></a>
+                            <a href="javascript:switchLight('secondLight');"><img src="img/lightOn.png" id="secondLight" border="0" hspace="4" alt="W3Schools" width="30"
+                                    height="30" align="right"></a>
                         </p>
                         <p class="card-text">Garage
-                            <a href="javascript:switchLight('thirdLight');"><img src="img/lightOff.png" id="thirdLight" border="0" hspace="4" alt="W3Schools" width="30" height="30" align="right"></a>
+                            <a href="javascript:switchLight('thirdLight');"><img src="img/lightOff.png" id="thirdLight" border="0" hspace="4" alt="W3Schools" width="30"
+                                    height="30" align="right"></a>
                         </p>
                         <p class="card-text">Patio
-                            <a href="javascript:switchLight('fourthLight');"><img src="img/lightOn.png" id="fourthLight" border="0" hspace="4" alt="W3Schools" width="30" height="30" align="right"></a>
+                            <a href="javascript:switchLight('fourthLight');"><img src="img/lightOn.png" id="fourthLight" border="0" hspace="4" alt="W3Schools" width="30"
+                                    height="30" align="right"></a>
                         </p>
                     </div>
                 </div>
@@ -119,8 +126,8 @@
                         <p class="card-text">Living room
                             <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/ok.png" width="30" height="30" align="right"></a>
                         </p>
-                        <p class="card-text">Hall
-                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/ok.png" width="30" height="30" align="right"></a>
+                        <p class="card-text">Kitchen
+                            <img id="kitchenWindow" border="0" hspace="4" alt="W3Schools" src="img/ok.png" width="30" height="30" align="right">
                         </p>
                         <p class="card-text">Bedroom
                             <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/warning.png" width="30" height="30" align="right"></a>
@@ -146,7 +153,8 @@
                     <div class="card-block">
                         <h4 class="card-title"><a href="#">Irrigation System</a></h4>
                         <p class="card-text">Front lawn
-                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/irrigationOn.png" width="30" height="30" align="right"></a>
+                            <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/irrigationOn.png" width="30" height="30"
+                                    align="right"></a>
                         </p>
                         <p class="card-text">Back lawn room
                             <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/today.png" width="30" height="30" align="right"></a>
@@ -164,7 +172,7 @@
                 <div class="card h-100 tile6 threeD">
                     <div class="card-block">
                         <h4 class="card-title"><a href="#">Settings</a></h4>
-                        <p class="card-text">Permissions 
+                        <p class="card-text">Permissions
                             <a href="https://www.w3schools.com"><img border="0" hspace="4" alt="W3Schools" src="img/permissions.png" width="30" height="30" align="right"></a>
                         </p>
                         <p class="card-text">Users

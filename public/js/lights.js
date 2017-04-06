@@ -5,67 +5,67 @@ var fourthLight = "off";
 
 var lightsNames = ["firstLight", "secondLight", "thirdLight", "fourthLight"];
 
-$(document).ready(function(){
+$(document).ready(function () {
     fetchLightStates();
 });
 
 // get initial lights state
 document.onreadystatechange = function () {
-    if(document.getElementById("firstLight").src.indexOf("img/lightOn.png") != -1) {
+    if (document.getElementById("firstLight").src.indexOf("img/lightOn.png") != -1) {
         firstLight = "on";
-    } else{
+    } else {
         firstLight = "off";
     }
-    
-    if(document.getElementById("secondLight").src.indexOf("img/lightOn.png") != -1) {
+
+    if (document.getElementById("secondLight").src.indexOf("img/lightOn.png") != -1) {
         firstLight = "on";
-    } else{
+    } else {
         firstLight = "off";
     }
-    
-    if(document.getElementById("thirdLight").src.indexOf("img/lightOn.png") != -1) {
+
+    if (document.getElementById("thirdLight").src.indexOf("img/lightOn.png") != -1) {
         firstLight = "on";
-    } else{
+    } else {
         firstLight = "off";
     }
-    
-    if(document.getElementById("fourthLight").src.indexOf("img/lightOn.png") != -1) {
+
+    if (document.getElementById("fourthLight").src.indexOf("img/lightOn.png") != -1) {
         firstLight = "on";
-    } else{
+    } else {
         firstLight = "off";
     }
 };
 
 
 function switchLight(id) {
-    if(document.getElementById(id).src.indexOf("img/lightOn.png") != -1) {
-        document.getElementById(id).src="img/lightOff.png";
-        sendJson();
-    } else{
-        document.getElementById(id).src="img/lightOn.png";
-        sendJson();
-    }
-    
     reverseState(id);
+
+    if (document.getElementById(id).src.indexOf("img/lightOn.png") != -1) {
+        document.getElementById(id).src = "img/lightOff.png";
+    } else {
+        document.getElementById(id).src = "img/lightOn.png";
+    }
+
+    sendJson();
 }
 
 
-function sendJson(){
+function sendJson() {
     xhr = new XMLHttpRequest();
     var url = "https://hon-hackaton-team3-nr.mybluemix.net/ui/lights/fd6ce24c-2e31-4577-9479-f69fcdee5feb";
     xhr.open("PUT", url, true);
     xhr.setRequestHeader("Content-type", "application/json");
-    
-    var data = '{"id":"lights", "firstLight": "' + firstLight + '", "secondLight": "' + secondLight + '", "thirdLight": "' + thirdLight + '", "fourthLight": "' +  fourthLight + '"}';
-    
+
+    var data = '{"id":"lights", "firstLight": "' + firstLight + '", "secondLight": "' + secondLight + '", "thirdLight": "' + thirdLight + '", "fourthLight": "' + fourthLight + '"}';
+
     xhr.send(data);
 }
 
-function fetchLightStates(){
+function fetchLightStates() {
     updateStates($.getJSON('https://hon-hackaton-team3-nr.mybluemix.net/ui/lights/fd6ce24c-2e31-4577-9479-f69fcdee5feb'));
 }
 
-function updateStates(data){
+function updateStates(data) {
     firstLight = data.firstLight;
     secondLight = data.secondLight;
     thirdLight = data.thirdLight;
@@ -78,42 +78,42 @@ function updateStates(data){
 }
 
 
-function setLightState(id, state){
-    if(state == "off") {
-        document.getElementById(id).src="img/lightOff.png";
-    } else{
-        document.getElementById(id).src="img/lightOn.png";
-    }    
+function setLightState(id, state) {
+    if (state == "off") {
+        document.getElementById(id).src = "img/lightOff.png";
+    } else {
+        document.getElementById(id).src = "img/lightOn.png";
+    }
 }
 
 
-function reverseState(id){
-    if(id == "firstLight"){
-        if(firstLight == "off"){
+function reverseState(id) {
+    if (id == "firstLight") {
+        if (firstLight == "off") {
             firstLight = "on";
         } else {
             firstLight = "off";
         }
     }
-    
-    if(id == "secondLight"){
-        if(secondLight == "off"){
+
+    if (id == "secondLight") {
+        if (secondLight == "off") {
             secondLight = "on";
         } else {
             secondLight = "off";
         }
     }
-    
-    if(id == "thirdLight"){
-        if(thirdLight == "off"){
+
+    if (id == "thirdLight") {
+        if (thirdLight == "off") {
             thirdLight = "on";
         } else {
             thirdLight = "off";
         }
     }
-    
-    if(id == "fourthLight"){
-        if(fourthLight == "off"){
+
+    if (id == "fourthLight") {
+        if (fourthLight == "off") {
             fourthLight = "on";
         } else {
             fourthLight = "off";
