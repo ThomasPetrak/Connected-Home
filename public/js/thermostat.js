@@ -8,5 +8,23 @@ $(document).ready(function(){
 });
 
 
+function decreaseTemp(id){
+    temps[getKey(id)] = temps[getKey(id)] - 1;
+    $("#" + id).text(temps[getKey(id)]);
+}
+
+function increaseTemp(id){
+    temps[getKey(id)] = temps[getKey(id)] + 1;
+    $("#" + id).text(temps[getKey(id)]);
+}
 
 
+function getKey(id){
+    if(id == "temp1"){
+        return 0;
+    } else if (id == "temp2"){
+        return 1;
+    } else {
+        return 2;
+    }
+}
