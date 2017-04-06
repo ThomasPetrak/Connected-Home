@@ -62,17 +62,19 @@ function sendJson(){
 }
 
 function fetchLightStates(){
-    $.getJSON('https://hon-hackaton-team3-nr.mybluemix.net/ui/lights/fd6ce24c-2e31-4577-9479-f69fcdee5feb', function(data) {
-        firstLight = data.firstLight;
-        secondLight = data.secondLight;
-        thirdLight = data.thirdLight;
-        fourthLight = data.fourthLight;
+    updateStates($.getJSON('https://hon-hackaton-team3-nr.mybluemix.net/ui/lights/fd6ce24c-2e31-4577-9479-f69fcdee5feb'));
+}
 
-        setLightState(lightsNames[0], firstLight);
-        setLightState(lightsNames[1], secondLight);
-        setLightState(lightsNames[2], thirdLight);
-        setLightState(lightsNames[3], fourthLight);
-    });
+function updateStates(data){
+    firstLight = data.firstLight;
+    secondLight = data.secondLight;
+    thirdLight = data.thirdLight;
+    fourthLight = data.fourthLight;
+
+    setLightState(lightsNames[0], firstLight);
+    setLightState(lightsNames[1], secondLight);
+    setLightState(lightsNames[2], thirdLight);
+    setLightState(lightsNames[3], fourthLight);
 }
 
 
