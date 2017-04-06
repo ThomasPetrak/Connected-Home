@@ -1,0 +1,7 @@
+{
+    "id": "lights",
+    "Living Room": "on",
+    "Kitchen": "off",
+    "Garage": "on",
+    "Patio": "off"
+}
